@@ -1,6 +1,0 @@
-Grades for version committed on time
-	sc2_block: 50.0 / 50
-	blackbox: 50.0 / 50
-Total: 100.0 / 100
-
-Final Score: 100.0 / 100
