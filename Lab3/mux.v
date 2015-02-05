@@ -16,6 +16,11 @@ endmodule // mux2
 module mux4(out, A, B, C, D, control);
     output      out;
     input       A, B, C, D;
-    input [1:0] control;
+    input [1:0] control; 
+    wire        wAB, wCD;
+
+    mux2 m1(wAB, A, B, control[0]);
+    mux2 m2(wCD, C, D, control[0]);
+    mux2 m3(out, wAB, wCD, control[1]);
 
 endmodule // mux4
