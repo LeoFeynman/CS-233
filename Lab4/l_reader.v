@@ -26,10 +26,10 @@ module l_reader(L, bits, clk, restart);
     output      L;
     input [2:0] bits;
     input       restart, clk;
-    wire        sNull, sNull_next;
+    wire        sBlank, sBlank_next;
     
-    assign sNull_next = restart;   // | other condition ... 
+    assign sBlank_next = restart;   // | other condition ... 
         
-    dffe fsNull(sNull, sNull_next, clk, 1'b1, 1'b0);
+    dffe fsBlank(sBlank, sBlank_next, clk, 1'b1, 1'b0);
     
 endmodule // l_reader
