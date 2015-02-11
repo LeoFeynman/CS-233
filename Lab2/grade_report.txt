@@ -1,0 +1,15 @@
+Grades for version committed on time
+	steering: 0 / 20
+		Failed to compile student code
+	extract_message: 0.0 / 40
+		
+		Test 1: UNABLE TO FIND GRADER OUTPUT!
+		Test 2: UNABLE TO FIND GRADER OUTPUT!
+		Test 3: UNABLE TO FIND GRADER OUTPUT!
+		Test 4: UNABLE TO FIND GRADER OUTPUT!
+		
+	count_ones: 0 / 40
+		Failed to compile student code
+Total: 0.0 / 100
+
+Final Score: 0.0 / 100
