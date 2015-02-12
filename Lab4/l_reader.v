@@ -26,10 +26,28 @@ module l_reader(L, bits, clk, restart);
     output      L;
     input [2:0] bits;
     input       restart, clk;
-    wire        sBlank, sBlank_next;
+    wire        in000, in111, in001,
+                sBlank, sBlank_next,
+                sLA_next, sLB_next, sLA, sLB,
+                sL_end, sL_end_next,
+                sGarbage, sGarbage_next;
     
-    assign sBlank_next = restart;   // | other condition ... 
+    assign in000 = bits == 3'b000;
+    assign in111 = bits == 3'b111;
+    assign in001 = bits == 3'b001;
+
+    assign sGarbage_next = (sBlank & ~(in000 | in111)) | (sLA & ~ (in000 | in001)) | (sLB & ~ in000) | (sL_end & ~(in000 | in111)) | (sGarbage & ~in000); 
+    assign sBlank_next = restart | ((sBlank | sL_end | sGarbage | sLA) & in000);
+    assign sLA_next = (sBlank | sL_end) & in111;
+    assign sLB_next = sLA & in001; 
+    assign sL_end_next = sLB & in000; 
         
     dffe fsBlank(sBlank, sBlank_next, clk, 1'b1, 1'b0);
-    
+    dffe fsGarbage(sGarbage, sGarbage_next, clk, 1'b1, 1'b0);
+    dffe fsLA(sLA, sLA_next, clk, 1'b1, 1'b0);
+    dffe fsLB(sLB, sLB_next, clk, 1'b1, 1'b0);
+    dffe fsL_end(sL_end, sL_end_next, clk, 1'b1, 1'b0);
+
+    assign L = sL_end;
 endmodule // l_reader
+

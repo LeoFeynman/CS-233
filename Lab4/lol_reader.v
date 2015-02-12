@@ -26,10 +26,53 @@ module lol_reader(L, O, Y, bits, clk, restart);
     output      L, O, Y;
     input [2:0] bits;
     input       restart, clk;
-    wire        sBlank, sBlank_next;
+    wire        in000, in111, in001, in101, in100, in011,
+                sBlank, sBlank_next,
+                sLA_next, sLB_next, sOA_next, sOB_next, sOC_next, sYA_next, sYB_next, sYC_next,
+		sLA, sLB, sOA, sOB, sOC, sYA, sYB, sYC,
+                sL_end, sL_end_next, sO_end, sO_end_next, sY_end, sY_end_next,
+                sGarbage, sGarbage_next;
+
+    assign in000 = bits == 3'b000;
+    assign in111 = bits == 3'b111;
+    assign in001 = bits == 3'b001;
+    assign in101 = bits == 3'b101;
+    assign in100 = bits == 3'b100;
+    assign in011 = bits == 3'b011;
+
+    assign sGarbage_next = ((sLA & ~(in000 | in001)) | ((sLB | sOC | sYC | sGarbage) & ~in000) | ((sL_end | sO_end) & ~(in000 | in111)) | (sOA & ~(in000 | in101)) | (sOB & ~in111) | (sBlank & ~(in000 | in111 | in100)) | (sYA & ~(in000 | in011)) | ((sYB | sY_end) & ~(in000 | in100)));
+
+    assign sBlank_next = restart | ((sBlank | sL_end | sGarbage | sLA | sOA | sOB | sO_end | sYA | sYB | sY_end) & in000);
+
+    assign sLA_next = ((sBlank | sL_end) & in111);
+    assign sLB_next = (sLA & in001); 
+    assign sL_end = (sLB & in0000); 
+   
+    assign sOA_next = ((sBlank | sO_end) & in111);
+    assign sOB_next = (sOA & in101);
+    assign sOC_next = (sOB & in111);
+    assign sO_end = (sOC & in000);
+
+    assign sYA_next = ((sBlank | sY_end) & in100);
+    assign sYB_next = (sYA & in011);
+    assign sYC_next = (sYB & in100);
+    assign sY_end = (sYC & in000);
     
-    assign sBlank_next = restart;   // | other condition ... 
         
     dffe fsBlank(sBlank, sBlank_next, clk, 1'b1, 1'b0);
-    
+    dffe fsGarbage(sGarbage, sGarbage_next, clk, 1'b1, 1'b0);
+
+    dffe fsLA(sLA, sLA_next, clk, 1'b1, 1'b0);
+    dffe fsLB(sLB, sLB_next, clk, 1'b1, 1'b0);
+    dffe fsL_end(sL_end, sL_end_next, clk, 1'b1, 1'b0);
+
+    dffe fsOA(sOA, sOA_next, clk, 1'b1, 1'b0);
+    dffe fsOB(sOB, sOB_next, clk, 1'b1, 1'b0);
+    dffe fsOC(sOC, sOC_next, clk, 1'b1, 1'b0);
+    dffe fsO_end(sO_end, sO_end_next, clk, 1'b1, 1'b0);
+
+    assign L = sL_end;
+    assign O = sO_end;
+    assign Y = sY_end;
+
 endmodule // lol_reader
