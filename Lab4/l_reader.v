@@ -36,11 +36,11 @@ module l_reader(L, bits, clk, restart);
     assign in111 = bits == 3'b111;
     assign in001 = bits == 3'b001;
 
-    assign sGarbage_next = ((sBlank | sL_end) & ~(in000 | in111)) | (sLA & ~ (in000 | in001)) | (sLB & ~ in000) | (sGarbage & ~in000); 
+    assign sGarbage_next = ~restart & (((sBlank | sL_end) & ~(in000 | in111)) | (sLA & ~ (in000 | in001)) | (sLB & ~ in000) | (sGarbage & ~in000)); 
     assign sBlank_next = restart | ((sBlank | sL_end | sGarbage | sLA) & in000);
-    assign sLA_next = (sBlank | sL_end) & in111;
-    assign sLB_next = sLA & in001; 
-    assign sL_end_next = sLB & in000; 
+    assign sLA_next = ~restart & ((sBlank | sL_end) & in111);
+    assign sLB_next = ~restart & (sLA & in001); 
+    assign sL_end_next = ~restart & (sLB & in000); 
         
     dffe fsBlank(sBlank, sBlank_next, clk, 1'b1, 1'b0);
     dffe fsGarbage(sGarbage, sGarbage_next, clk, 1'b1, 1'b0);
