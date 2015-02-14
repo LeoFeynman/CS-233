@@ -1,0 +1,12 @@
+Grades for version committed on time
+	l_reader: 20.0 / 20.0
+		Passed test: L correctly detected
+		Passed test: L correctly detected
+		Passed test: L correctly detected
+		Passed test: L correctly detected
+		Passed test: L correctly detected
+		Passed test: L correctly detected
+		
+Total: 20.0 / 20
+
+Final Score: 20.0 / 20
