@@ -1,0 +1,10 @@
+Grades for version committed on time
+	mux4: 10 / 10.0
+		
+		
+	logicunit: 10 / 10.0
+		10	
+		
+Total: 20.0 / 20
+
+Final Score: 20.0 / 20
