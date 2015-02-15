@@ -1,0 +1,20 @@
+Grades for version committed on time
+	alu1: 20 / 20.0
+		
+		
+	alu32: 60 / 60.0
+		
+			*Passed test: Zero flag
+			*Passed test: Add 0x22222222+0x11111111=0x33333333
+			*Passed test: Sub 0x22222222-0x11111111=0x11111111
+			*Passed test: AND f0ca9653&12345678=10001650
+			*Passed test: OR f0ca9653|fedcba98=fedebedb
+			*Passed test: NOR ~(f0ca9653|12345678)=d012984
+			*Passed test: XOR f0ca9653^fedcba98=e162ccb
+			*Passed test: Overflow 1 0x7fffffff+1
+			*Passed test: Oveflow 2 0x80000000-1
+			*Passed test: Negative flag
+		
+Total: 80.0 / 80
+
+Final Score: 80.0 / 80
