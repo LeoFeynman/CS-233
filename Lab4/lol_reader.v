@@ -41,23 +41,23 @@ module lol_reader(L, O, Y, bits, clk, restart);
     assign in011 = bits == 3'b011;
 
 
-    assign sGarbage_next = (sBlank & ~(in000 | in111 | in100)) | ((sL_end | sO_end) & ~(in000 | in111)) | (sLA & ~(in000 | in001)) | ((sLB | sOC) & ~in000) | (sGarbage & ~in000) | (sOA & ~(in101 | in000)) | sOB & ~in111 | (sYA & ~(in000 | in011)) | ((sYB | sY_end) & ~(in000|in100)) | (sYC & ~in000); 
+    assign sGarbage_next = ~restart & ((sBlank & ~(in000 | in111 | in100)) | ((sL_end | sO_end) & ~(in000 | in111)) | (sLA & ~(in000 | in001)) | ((sLB | sOC) & ~in000) | (sGarbage & ~in000) | (sOA & ~(in101 | in000)) | sOB & ~in111 | (sYA & ~(in000 | in011)) | ((sYB | sY_end) & ~(in000|in100)) | (sYC & ~in000)); 
 
     assign sBlank_next = restart | ((sBlank | sL_end | sGarbage | sLA | sOA | sOB | sO_end | sYA | sYB | sY_end) & in000);
 
-    assign sLA_next = ((sBlank | sL_end) & in111);
-    assign sLB_next = (sLA & in001); 
-    assign sL_end_next = (sLB & in000); 
+    assign sLA_next = ~restart & ((sBlank | sL_end) & in111);
+    assign sLB_next = ~restart & (sLA & in001); 
+    assign sL_end_next = ~restart & (sLB & in000); 
    
-    assign sOA_next = ((sBlank | sO_end) & in111);
-    assign sOB_next = (sOA & in101);
-    assign sOC_next = (sOB & in111);
-    assign sO_end_next = (sOC & in000);
+    assign sOA_next = ~restart & ((sBlank | sO_end) & in111);
+    assign sOB_next = ~restart & (sOA & in101);
+    assign sOC_next = ~restart & (sOB & in111);
+    assign sO_end_next = ~restart & (sOC & in000);
 
-    assign sYA_next = ((sBlank | sY_end) & in100);
-    assign sYB_next = (sYA & in011);
-    assign sYC_next = (sYB & in100);
-    assign sY_end_next = (sYC & in000);
+    assign sYA_next = ~restart & ((sBlank | sY_end) & in100);
+    assign sYB_next = ~restart & (sYA & in011);
+    assign sYC_next = ~restart & (sYB & in100);
+    assign sY_end_next = ~restart & (sYC & in000);
     
         
     dffe fsBlank(sBlank, sBlank_next, clk, 1'b1, 1'b0);
