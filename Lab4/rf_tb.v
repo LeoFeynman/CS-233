@@ -11,8 +11,14 @@ module test;
     initial begin
         $dumpfile("rf.vcd");
         $dumpvars(0, test);
+	assign wr_data=32'hFFFFFFFF;
         # 10  reset = 0;      // stop reseting the RF
-
+	# 10 wr_regnum=5'b00100;enable=0;
+	# 10 rd1_regnum = 5'b00100;
+	# 10
+	# 10 enable=1;
+	# 10
+	# 10 reset=1;
         # 700 $finish;
     end
     
