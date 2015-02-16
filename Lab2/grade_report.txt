@@ -1,0 +1,13 @@
+Grades for version committed on time
+	steering: 0 / 20
+		Failed to compile student code
+		
+	extract_message: 0 / 40
+		Failed to compile student code
+		
+	count_ones: 0 / 40
+		Failed to compile student code
+		
+Total: 0.0 / 100
+
+Final Score: 0.0 / 100
