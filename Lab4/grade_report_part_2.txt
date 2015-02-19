@@ -1,0 +1,67 @@
+Grades for version committed on time
+	yolo reader: 40.0 / 30.0
+		Passed test: Y correctly detected
+		Passed test: Y correctly detected
+		Failed test: O not detected
+		Passed test: L correctly detected
+		Passed test: L correctly detected
+		Passed test: L correctly detected
+		Passed test: L correctly detected
+		Passed test: O correctly detected
+		Passed test: O correctly detected
+		Passed test: Y correctly detected
+		Passed test: Y correctly detected
+		Passed test: Y correctly detected
+		Passed test: O correctly detected
+		Passed test: O correctly detected
+		Passed test: L correctly detected
+		Passed test: L correctly detected
+		
+	decoders: 20 / 20.0
+		Passed test: 4 decoder
+		Passed test: 8 decoder
+		Passed test: 16 decoder
+		Passed test: 32 decoder
+		
+	register file: 30 / 30.0
+		Passed test: Write One Register
+		Passed test: Register Zero always 0
+		Passed test: Register 1 read and write correctly
+		Passed test: Register 2 read and write correctly
+		Passed test: Register 3 read and write correctly
+		Passed test: Register 4 read and write correctly
+		Passed test: Register 5 read and write correctly
+		Passed test: Register 6 read and write correctly
+		Passed test: Register 7 read and write correctly
+		Passed test: Register 8 read and write correctly
+		Passed test: Register 9 read and write correctly
+		Passed test: Register 10 read and write correctly
+		Passed test: Register 11 read and write correctly
+		Passed test: Register 12 read and write correctly
+		Passed test: Register 13 read and write correctly
+		Passed test: Register 14 read and write correctly
+		Passed test: Register 15 read and write correctly
+		Passed test: Register 31 read and write correctly
+		Passed test: Register 30 read and write correctly
+		Passed test: Register 29 read and write correctly
+		Passed test: Register 28 read and write correctly
+		Passed test: Register 27 read and write correctly
+		Passed test: Register 26 read and write correctly
+		Passed test: Register 25 read and write correctly
+		Passed test: Register 24 read and write correctly
+		Passed test: Register 23 read and write correctly
+		Passed test: Register 22 read and write correctly
+		Passed test: Register 21 read and write correctly
+		Passed test: Register 20 read and write correctly
+		Passed test: Register 19 read and write correctly
+		Passed test: Register 18 read and write correctly
+		Passed test: Register 17 read and write correctly
+		Passed test: Register 16 read and write correctly
+		Passed test: Enable Works Correctly
+		Passed test: Reset Works Correctly
+		Passed test: Write All Registers
+		Passed test: Both Read Ports Work
+		
+Total: 90.0 / 80
+
+Final Score: 90.0 / 80
