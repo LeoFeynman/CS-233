@@ -13,22 +13,23 @@ module mips_decode(alu_op, writeenable, rd_src, alu_src2, except, opcode, funct)
     output [2:0] alu_op;
     output       writeenable, rd_src, alu_src2, except;
     input  [5:0] opcode, funct;
-    wire add, sub, and0, or0, nor0, xor0, addi, andi, ori, xori, 
+    wire add, sub, and0, or0, nor0, xor0, addi, andi, ori, xori;
 
-	assign add = `OP_OTHER0 & `OP0_ADD;
-	assign sub = `OP_OTHER0 & `OP0_SUB;
-	assign and0 = `OP_OTHER0 & `OP0_AND;
-	assign or0 = `OP_OTHER0 & `OP0_OR;
-	assign nor0 = `OP_OTHER0 & `OP0_NOR;
-	assign xor0 = `OP_OTHER0 & `OP0_XOR;
+	assign add = (opcode == `OP_OTHER0) & (funct == `OP0_ADD);
+	assign sub = (opcode == `OP_OTHER0) & (funct == `OP0_SUB);
+	assign and0 = (opcode == `OP_OTHER0) & (funct == `OP0_AND);
+	assign or0 = (opcode == `OP_OTHER0) & (funct == `OP0_OR);
+	assign nor0 = (opcode == `OP_OTHER0) & (funct == `OP0_NOR);
+	assign xor0 = (opcode == `OP_OTHER0) & (funct == `OP0_XOR);
 
-	assign addi=`OP_ADDI;
-	assign andi=`OP_ANDI;
-	assign ori=`OP_ORI;
-	assign xori=`OP_XORI;
+	assign addi = (opcode == `OP_ADDI);
+	assign andi = (opcode == `OP_ANDI);
+	assign ori = (opcode == `OP_ORI);
+	assign xori = (opcode == `OP_XORI);
 
-	assign rd_src =  addi | andi | ori | xori;
-	assign alu_src2 =  addi | andi | ori | xori;
+
+	assign rd_src =  (addi | andi | ori | xori);
+	assign alu_src2 =  (addi | andi | ori | xori);
 
 	assign except = ~(add | sub | and0 | or0 | xor0 | nor0 | addi | andi | ori | xori);
 	assign writeenable = ~except;

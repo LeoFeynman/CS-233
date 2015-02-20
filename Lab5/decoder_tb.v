@@ -5,6 +5,7 @@ module decoder_test;
         $dumpfile("decoder.vcd");
         $dumpvars(0, decoder_test);
 
+
              opcode = `OP_OTHER0; funct = `OP0_ADD; // try addition
         # 10 opcode = `OP_OTHER0; funct = `OP0_SUB; // try subtraction
         # 10 opcode = `OP_OTHER0; funct = `OP0_AND;
@@ -15,6 +16,8 @@ module decoder_test;
 	# 10 opcode = `OP_ANDI;
 	# 10 opcode = `OP_ORI;
 	# 10 opcode = `OP_XORI;
+        # 10 opcode = 6'h27; funct = 6'h25;
+
         # 10 $finish;
     end
 
