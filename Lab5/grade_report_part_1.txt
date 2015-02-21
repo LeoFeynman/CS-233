@@ -1,0 +1,20 @@
+Grades for version committed on time
+	decoder: 20.0 / 20.0
+			*Passed test: invalid
+			*Passed test: add
+			*Passed test: addi
+			*Passed test: sub
+			*Passed test: invalid
+			*Passed test: and
+			*Passed test: invalid
+			*Passed test: andi
+			*Passed test: or
+			*Passed test: ori
+			*Passed test: nor
+			*Passed test: invalid
+			*Passed test: xor
+			*Passed test: xori
+		
+Total: 20.0 / 20
+
+Final Score: 20.0 / 20
