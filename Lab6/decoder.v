@@ -26,5 +26,51 @@ module mips_decode(alu_op, writeenable, rd_src, alu_src2, except, control_type,
     output       mem_read, word_we, byte_we, byte_load, lui, slt;
     input  [5:0] opcode, funct;
     input        zero;
+    wire         add, sub, and0, or0, nor0, xor0, addi, andi, ori, xori;
+    wire         bne, beq, j, jr, lw, lbu, sw, sb;
+
+	assign add = (opcode == `OP_OTHER0) & (funct == `OP0_ADD);
+	assign sub = (opcode == `OP_OTHER0) & (funct == `OP0_SUB);
+	assign and0 = (opcode == `OP_OTHER0) & (funct == `OP0_AND);
+	assign or0 = (opcode == `OP_OTHER0) & (funct == `OP0_OR);
+	assign nor0 = (opcode == `OP_OTHER0) & (funct == `OP0_NOR);
+	assign xor0 = (opcode == `OP_OTHER0) & (funct == `OP0_XOR);
+
+	assign bne = (opcode == `OP_BNE);
+	assign beq = (opcode == `OP_BEQ);
+	assign j = (opcode == `OP_J);
+	assign jr = (opcode == `OP_OTHER0) & (funct == `OP0_JR);
+	assign lw = (opcode == `OP_LW);
+	assign lbu = (opcode ==`OP_LBU);
+	assign sw = (opcode == `OP_SW);
+	assign sb = (opcode == `OP_SB);
+	assign lui = (opcode == `OP_LUI);
+	assign slt = (opcode == `OP_OTHER0) & (funct == `OP0_SLT);
+
+
+	assign addi = (opcode == `OP_ADDI);
+	assign andi = (opcode == `OP_ANDI);
+	assign ori = (opcode == `OP_ORI);
+	assign xori = (opcode == `OP_XORI);
+
+
+	assign rd_src =  (addi | andi | ori | xori | lui | lw | lbu);
+	assign alu_src2 =  (addi | andi | ori | xori | lw | lbu | sw | sb);
+
+	assign except = ~(add | sub | and0 | or0 | xor0 | nor0 | addi | andi | ori | xori | bne | beq | j | jr | lui | slt | lw | lbu | sw | sb);
+	assign writeenable = (add | sub | and0 | or0 | xor0 | nor0 | addi | andi | ori | xori | lui | slt | lw | lbu);
+
+	assign alu_op[0] = (sub | or0 | xor0 | ori | xori | slt | beq | bne);
+	assign alu_op[1] = (add | sub | xor0 | nor0 | addi | xori | slt | lw | lbu | sw | sb | beq | bne);
+	assign alu_op[2] = (and0 | or0 | xor0 | nor0 | andi | ori | xori);
+    
+
+	assign control_type[0] = ((beq&zero) | (bne& ~zero) | jr);
+	assign control_type[1] = (j | jr);
+	assign mem_read = (lw | lbu);
+	assign word_we = sw;
+	assign byte_we = sb;
+	assign byte_load = lbu;
+
 
 endmodule // mips_decode
