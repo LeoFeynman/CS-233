@@ -1,0 +1,54 @@
+Grades for version committed on time
+	arith_machine: 10.0 / 80.0
+		If shown, tuples are (PC, inst, exp) or (reg, value)
+			*Passed test: reset works
+			*Passed test: reset works
+			*Passed test: reset works
+			*Passed test: reset works
+			*Passed test: reset works
+			*Failed test: addi works
+				*Your output: ('5', '0x00000000')
+			*Failed test: addi works
+				*Your output: ('6', '0x00000000')
+			*Failed test: addi works
+				*Your output: ('7', '0x00000000')
+			*Failed test: addi works
+				*Your output: ('8', '0x00000000')
+			*Failed test: addi works
+				*Your output: ('9', '0x00000000')
+			*Failed test: add works
+				*Your output: ('10', '0x00000000')
+			*Failed test: sub works
+				*Your output: ('11', '0x00000000')
+			*Failed test: and works
+				*Your output: ('12', '0x00000000')
+			*Failed test: or works
+				*Your output: ('13', '0x00000000')
+			*Failed test: xor works
+				*Your output: ('14', '0x00000000')
+			*Failed test: nor works
+				*Your output: ('15', '0x00000000')
+			*Failed test: addi works
+				*Your output: ('16', '0x00000000')
+			*Failed test: andi works
+				*Your output: ('17', '0x00000000')
+			*Failed test: ori works
+				*Your output: ('18', '0x00000000')
+			*Failed test: xori works
+				*Your output: ('19', '0x00000000')
+			*Passed test: reset works
+			*Passed test: reset works
+			*Passed test: reset works
+			*Passed test: reset works
+			*Passed test: reset works
+			*Passed test: reset works
+			*Passed test: reset works
+			*Passed test: reset works
+			*Passed test: reset works
+			*Passed test: reset works
+			*Passed test: reset works
+			*Passed test: reset works
+		
+Total: 10.0 / 80
+
+Final Score: 10.0 / 80
