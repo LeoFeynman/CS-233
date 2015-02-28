@@ -1,0 +1,20 @@
+Grades for version committed on time
+	decoder: 20.0 / 20.0
+		If shown, tuples are (alu_op, wr_enable, rd_src, alu_src2, except, ctrl_type, mem_read, word_we, byte_we, byte_load, lui, slt)
+			*Passed test: beq
+			*Passed test: beq
+			*Passed test: bne
+			*Passed test: bne
+			*Passed test: j
+			*Passed test: j
+			*Passed test: jr
+			*Passed test: lui
+			*Passed test: slt
+			*Passed test: lw
+			*Passed test: lbu
+			*Passed test: sw
+			*Passed test: sw
+		
+Total: 20.0 / 20
+
+Final Score: 20.0 / 20
