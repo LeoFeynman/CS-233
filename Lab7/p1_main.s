@@ -34,7 +34,7 @@ main:
 
 	la	$a0, selfie
 	li	$a1, 0
-	li	$a1, 15
+	li	$a2, 15
 	jal	horiz_strncmp
 	move	$a0, $v0
 	jal	print_int_and_space	# should print 0

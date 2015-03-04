@@ -20,6 +20,35 @@
 
 .globl vert_strncmp
 vert_strncmp:
+	li	$t0, 0			# wi = 0
+	move	$t1, $a1		# i = start_i
+	lw	$t9, num_rows		# load num_rows
+	bge	$t1, $t9, vs_exit	# i < num_rows
+
+
+	move	$a0, $t1		# argument i in get_char
+	move	$a1, $a2		# argument j in get_char 
+	jal	get_character
+
+	move	$t4, $v0		# t4 = get_char
+	add	$t2, $a0, $t0		# &word[wi]
+	lb	$t3, 0($t2)		# word[wi]
+	beq	$t4, $t3, vs_next	# first if loop
+	li	$v0, 0			# return 0
+
+vs_next:
+	add	$t5, $t0, 1		# word_iter + 1
+	add	$t6, $a0, $t5		# &word[wi+1]
+	lb	$t7, 0($t6)		# word[wi+1]
+	bne	$t7, 0, vs_exit		# second if loop
+	lw	$t8, num_columns	# load num_columns
+	mul	$t8, $t8, $t1		# i * num_columns
+	add	$t8, $t8, $a2		# i * num_columns + j
+	move	$v0, $t8		# return t8
+	jr	$ra
+
+vs_exit:
+	li	$v0, 0			# return 0 
 	jr	$ra
 
 
