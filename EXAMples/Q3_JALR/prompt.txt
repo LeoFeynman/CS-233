@@ -1,0 +1,7 @@
+jalr
+Jump and Link Register
+r-type
+opcode: 0x00	funct: 0x09
+
+R[31] = PC + 4
+PC = R[rs]

@@ -1,0 +1,7 @@
+lhu
+Load Half Unsigned
+i-type
+opcode: 0x25
+
+// remember that MIPS is little endian
+R[rt] = { 16'b0, M[R[rs] + SignExtImm](15:0) }

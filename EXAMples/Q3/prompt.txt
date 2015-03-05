@@ -1,0 +1,6 @@
+<assembly mnemonic>
+<english description>
+*-type
+opcode: ****	funct: **** (if applicable)
+
+<instruction decription (in register transfer level notation)>
