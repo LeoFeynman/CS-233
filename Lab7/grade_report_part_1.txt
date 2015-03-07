@@ -1,0 +1,24 @@
+Grades for version committed on time
+	get_character: 12.0 / 12.0
+			*Passed test: get_character H (given test)
+			*Passed test: get_character H (given test) (evil)
+			*Passed test: get_character I (given test)
+			*Passed test: get_character I (given test) (evil)
+			*Passed test: get_character corner
+			*Passed test: get_character corner (evil)
+			*Passed test: get_character zero
+			*Passed test: get_character zero (evil)
+		
+	horiz_strncmp: 28.0 / 28.0
+			*Passed test: horiz_strncmp SELFIE 76 (given test)
+			*Passed test: horiz_strncmp SELFIE 76 (given test) (evil)
+			*Passed test: horiz_strncmp SELFIE 0 (given test)
+			*Passed test: horiz_strncmp SELFIE 0 (given test) (evil)
+			*Passed test: horiz_strncmp HORIZONTAL
+			*Passed test: horiz_strncmp HORIZONTAL (evil)
+			*Passed test: horiz_strncmp word not found
+			*Passed test: horiz_strncmp word not found (evil)
+		
+Total: 40.0 / 40
+
+Final Score: 40.0 / 40
