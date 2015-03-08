@@ -12,6 +12,7 @@ notaword:
 
 .text
 main:
+
 	sub	$sp, $sp, 4
 	sw	$ra, 0($sp)
 
