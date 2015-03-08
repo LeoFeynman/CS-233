@@ -164,8 +164,9 @@ hsf_for:
 hsf_for2:
 	lw	$t6, num_columns
 	bge 	$s2, $s7, hsf_ipp		# goes to i++
-	add	$s6, $s6, $s2			# &array[j]
-	lb	$s3, 0($s6)			# cur_word = array[j]
+	mul	$t0, $s2, 4
+	add	$s6, $s6, $t0			# &array[j]
+	lw	$s3, 0($s6)			# cur_word = array[j]
 	
 	mul	$t8, $s2, 4			# j * 4
 	mul	$a1, $s1, $t6			# i * num_columns
@@ -179,9 +180,9 @@ hsf_for3:
 	li	$t9, 4				# 4
 	bge	$s4, $t9, hsf_jpp		# goes to j++
 	
-
-	add	$t9, $s0, $s4			# &cmp_w[k]
-	lb	$t9, 0($t9)			# cmp_w[k]
+	mul	$t9, $s4, 4
+	add	$t9, $s0, $t9			# &cmp_w[k]
+	lw	$t9, 0($t9)			# cmp_w[k]
 
 
 	bne	$s3, $t9, hsf_cur_word_8	# move cur_word by 8
