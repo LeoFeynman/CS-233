@@ -14,11 +14,12 @@
 
 .globl add_word_to_trie
 add_word_to_trie:
-	sub	$sp, $sp, 16
+	sub	$sp, $sp, 20
 	sw	$ra, 0($sp)
 	sw	$s0, 4($sp)
 	sw	$s1, 8($sp)
 	sw	$s2, 12($sp)
+	sw 	$s3, 16($sp)
 
 awt:
 	move	$s0, $a0
@@ -35,7 +36,8 @@ awt:
 	lw	$s0, 4($sp)
 	lw	$s1, 8($sp)
 	lw	$s2, 12($sp)
-	add	$sp, $sp, 16
+	lw	$s3, 16($sp)
+	add	$sp, $sp, 20
 
 	jr	$ra			# return
 
@@ -43,14 +45,14 @@ sec_if:
 	sub	$t2, $t1, 'A'		# c - A
 	mul	$t3, $t2, 4		# 4 * (c - A)
 	add	$t4, $s0, 4		# &trie->next[0]
-	add	$t4, $t3, $t4		# &trie->next[c-A]
-	lw	$a0, 0($t4)
+	add	$s3, $t3, $t4		# &trie->next[c-A]
+	lw	$a0, 0($s3)
 	bne	$a0, $0, awt_rec	# if (trie->next[c - 'A'] == NULL)
 	jal	alloc_trie		# alloc_trie()
+	sw	$v0, 0($s3)	
 	move	$a0, $v0
-	#sw	$v0, 0($a0)	
-
 awt_rec:
+	
 	add	$s2, $s2, 1
 	move	$a2, $s2
 	move	$a1, $s1
