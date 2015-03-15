@@ -55,6 +55,56 @@ hs_end:
 .globl vert_strncmp
 vert_strncmp:
 	# COPY PASTE YOUR OWN SOLUTION OR THE RELEASED SOLUTIONS HERE
+	sub	$sp, $sp, 24
+	sw	$ra, 0($sp)
+	sw	$s0, 4($sp)
+	sw	$s1, 8($sp)
+	sw	$s2, 12($sp)
+	sw	$s3, 16($sp)
+	sw	$s4, 20($sp)
+
+	move	$s0, $a0		# word
+	move	$s1, $a1		# i = start_i
+	move	$s2, $a2		# j
+	li	$s3, 0			# word_iter
+	lw	$s4, num_rows
+
+vs_for:
+	bge	$s1, $s4, vs_nope	# !(i < num_rows)
+
+	move	$a0, $s1
+	move	$a1, $s2
+	jal	get_character		# get_character(i, j)
+	add	$t0, $s0, $s3		# &word[word_iter]
+	lbu	$t1, 0($t0)		# word[word_iter]
+	bne	$v0, $t1, vs_nope
+
+	lbu	$t1, 1($t0)		# word[word_iter + 1]
+	bne	$t1, 0, vs_next
+	lw	$v0, num_columns
+	mul	$v0, $s1, $v0		# i * num_columns
+	add	$v0, $v0, $s2		# i * num_columns + j
+	j	vs_return
+
+vs_next:
+	add	$s1, $s1, 1		# i++
+	add	$s3, $s3, 1		# word_iter++
+	j	vs_for
+
+vs_nope:
+	li	$v0, 0			# return 0 (data flow)
+
+vs_return:
+	lw	$ra, 0($sp)
+	lw	$s0, 4($sp)
+	lw	$s1, 8($sp)
+	lw	$s2, 12($sp)
+	lw	$s3, 16($sp)
+	lw	$s4, 20($sp)
+	add	$sp, $sp, 24
+	jr	$ra
+
+
 	jr	$ra
 
 
