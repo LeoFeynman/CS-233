@@ -1,0 +1,59 @@
+Total: 68.5/100
+
+Testing add: 3.75/3.75
+Register 5 had correct value 0x00000014
+Register 6 had correct value 0xfffffffe
+No registers or memory were unexpectedly modified
+
+Testing sub: 3.75/3.75
+Register 5 had correct value 0xfffffff3
+Register 6 had correct value 0x0000001f
+No registers or memory were unexpectedly modified
+
+Testing and: 3.75/3.75
+Register 5 had correct value 0x000b0d0f
+Register 6 had correct value 0x00a0c0e0
+No registers or memory were unexpectedly modified
+
+Testing or: 3.75/3.75
+Register 10 had correct value 0xfafef0d1
+Register 11 had correct value 0xfadeb0fd
+No registers or memory were unexpectedly modified
+
+Testing lw: 3.75/3.75
+Register 2 had correct value 0x12345678
+Register 3 had correct value 0x87654321
+No registers or memory were unexpectedly modified
+
+Testing sw: 3.75/3.75
+Address 0x10010000 had correct value 0x0000002a
+Address 0x1001000c had correct value 0xcafebabe
+No registers or memory were unexpectedly modified
+
+Testing slt: 3.75/3.75
+Register 3 had correct value 0x00000001
+Register 4 had correct value 0x00000000
+Register 5 had correct value 0x00000000
+Register 6 had correct value 0x00000001
+Register 7 had correct value 0x00000000
+Register 8 had correct value 0x00000000
+Register 9 had correct value 0x00000001
+No registers or memory were unexpectedly modified
+
+Testing beq_taken: 1.875/1.875
+PC sequence 0x00400000, 0x00400008 was correct
+No registers or memory were unexpectedly modified
+
+Testing beq_not_taken: 1.875/1.875
+PC sequence 0x00400000, 0x00400004 was correct
+No registers or memory were unexpectedly modified
+
+Testing rdce_even: 19.25/35.0
+Register 12 had correct value 0x10010000
+Register 13 should have been 0x0000002a but was 0x10010000
+No registers or memory were unexpectedly modified
+
+Testing rdce_odd: 19.25/35.0
+Register 14 should have been 0xfffffff5 but was 0x10010000
+Register 15 had correct value 0x10010000
+No registers or memory were unexpectedly modified
