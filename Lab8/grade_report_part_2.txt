@@ -1,0 +1,32 @@
+Grades for version committed on time
+	add_word_to_trie: 30.0 / 30
+			*Passed test: add_word_to_trie FOOD (given test)
+			*Passed test: add_word_to_trie FOOD (given test) (evil)
+			*Passed test: add_word_to_trie null
+			*Passed test: add_word_to_trie null (evil)
+			*Passed test: add_word_to_trie EMPTY
+			*Passed test: add_word_to_trie EMPTY (evil)
+			*Passed test: add_word_to_trie SUPERCALIFRAGILISTICEXPIALIDOCIOUS
+			*Passed test: add_word_to_trie SUPERCALIFRAGILISTICEXPIALIDOCIOUS (evil)
+		
+	build_trie: 20.0 / 20
+			*Passed test: build_trie POSTING GOES SELFIE EVERYONE (given test)
+			*Passed test: build_trie POSTING GOES SELFIE EVERYONE (given test) (evil)
+			*Passed test: build_trie SUCH JUSTIN BIEBER THANKS OBAMA
+			*Passed test: build_trie SUCH JUSTIN BIEBER THANKS OBAMA (evil)
+			*Passed test: build_trie no words
+			*Passed test: build_trie no words (evil)
+		
+	find_words: 25.0 / 25
+			*Passed test: find_words puzzle_1 (given test)
+			*Passed test: find_words puzzle_1 (given test) (evil)
+			*Passed test: find_words puzzle_2
+			*Passed test: find_words puzzle_2 (evil)
+			*Passed test: find_words top half
+			*Passed test: find_words top_half (evil)
+			*Passed test: find_words empty
+			*Passed test: find_words empty (evil)
+		
+Total: 75.0 / 75
+
+Final Score: 75.0 / 75
