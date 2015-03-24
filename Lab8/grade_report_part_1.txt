@@ -1,0 +1,20 @@
+Grades for version committed on time
+	lookup_word_in_trie: 25.0 / 25.0
+			*Passed test: lookup_word_in_trie (null) (given test)
+			*Passed test: lookup_word_in_trie (null) (given test) (evil)
+			*Passed test: lookup_word_in_trie REX (given test)
+			*Passed test: lookup_word_in_trie REX (given test) (evil)
+			*Passed test: lookup_word_in_trie (null) 2 (given test)
+			*Passed test: lookup_word_in_trie (null) 2 (given test) (evil)
+			*Passed test: lookup_word_in_trie REN (given test)
+			*Passed test: lookup_word_in_trie REN (given test) (evil)
+			*Passed test: lookup_word_in_trie NOTFOUND
+			*Passed test: lookup_word_in_trie NOTFOUND (evil)
+			*Passed test: lookup_word_in_trie RESEARCH
+			*Passed test: lookup_word_in_trie RESEARCH (evil)
+			*Passed test: lookup_word_in_trie RAXACORICOFALLAPATORIUS
+			*Passed test: lookup_word_in_trie RAXACORICOFALLAPATORIUS (evil)
+		
+Total: 25.0 / 25
+
+Final Score: 25.0 / 25
