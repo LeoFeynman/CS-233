@@ -56,9 +56,11 @@ scan_sector:
         sw      $t4, SCAN_REQUEST	# store addr of array
 	mul	$t5, $t0, 4
 	add	$t5, $t5, $t4
+	la	$t4, flag_var
+	sw	$0, 0($t4)
 wait:
-	lw	$t3, flag_var
-	beq	$t3, 1, scan_fin
+	lw	$t4, flag_var
+	beq	$t4, 1, scan_fin
 	j	wait
 scan_fin:
 	lw	$t6, 0($t5)		# number of dust particles
@@ -71,14 +73,25 @@ next_sector:
 	bne	$t0, 64, scan_sector	# if next_sector <65, scan_sector
 move_bot:
 	li	$t7, 1			# absolute turn
+	div	$t2, $t2, 8
+	mfhi	$t9
+	mflo	$t2
+#	sub	$t9, $t9, 1		# row
+	mul	$t9, $t9, 37
+	add	$t9, $t9, 19		# coord
+#	mul	$t9, $t9, 4
+	move	$t1, $t9		# target_x
+#	sub	$t2, $t2, 1		
+	mul	$t2, $t2, 37
+	add	$t2, $t2, 19		# column
+	move	$t4, $t2		# target_y
+
 target_x:
 	la	$t0, sector_info
-	add	$t0, $t0, $t2
-	sw	$t0, SCAN_REQUEST
-	lw	$t1, 0($t0)		# target_x		
+	sw	$t0, SCAN_REQUEST				
 	lw	$t8, BOT_X		# get bot_x
 	beq	$t1, $t8, target_y
-	bgt	$t1, $t8, right		# move to the east if t1>t2
+	bgt	$t1, $t8, right		# move to the east if t1>t8
 
 	li	$t3, 180		# set orientation to west
 	sw	$t3, ANGLE
@@ -89,11 +102,10 @@ right:
 	sw	$t3, ANGLE
 	sw	$t7, ANGLE_CONTROL	# absolute turn
 	j	target_x		# keep adjust x
+
 target_y:
 	la	$t0, sector_info
-	add	$t0, $t0, $t2
-	sw	$t0, SCAN_REQUEST
-	lw	$t4, 4($t0)		# target_y
+	sw	$t0, SCAN_REQUEST	
 	lw	$t5, BOT_Y		# get bot_y
 	beq	$t4, $t5, gravity
 	bgt	$t4, $t5, down		# move to the south if t4>t5
@@ -107,8 +119,75 @@ down:
 	sw	$t6, ANGLE
 	sw	$t7, ANGLE_CONTROL	# absolute turn
 	j	target_y
+
+
+## sector located
 gravity:
-	jr	$ra
+	li	$t0, ENERGY_MASK
+	or	$t0, $t0, 1		
+	mtc0	$t0, $12		# enable energy_interrupt
+	li	$t0, 6
+	sw	$t0, FIELD_STRENGTH
+	li	$t0, 3
+	sw	$t0, VELOCITY
+	
+	la	$t0, PLANETS_REQUEST
+	li	$t7, 1			# absolute turn
+
+planet_x:
+	la	$t1, planet_info
+	sw	$t1, 0($t0)		# store addr		
+	lw 	$t1, 0($t1)		# get planet_x
+	lw	$t2, BOT_X		# get bot_x
+	beq	$t1, $t2, release
+	bgt	$t2, $t1, left		# move to the east if t1>t2
+
+	li	$t3, 0			# set orientation to east
+	sw	$t3, ANGLE
+	sw	$t7, ANGLE_CONTROL	# absolute turn
+	j	planet_x
+
+left:
+	li	$t3, 180		# set orientation to west
+	sw	$t3, ANGLE
+	sw	$t7, ANGLE_CONTROL	# absolute turn
+	j	planet_x		# keep adjust x
+
+planet_y:
+	la	$t1, planet_info
+	sw	$t1, 0($t0)		# store addr
+	lw	$t4, 4($t1)		# get planet_y
+	lw	$t5, BOT_Y		# get bot_y
+	beq	$t4, $t5, release
+	bgt	$t5, $t4, up		# move to the south if t4>t5
+
+	li	$t6, 90			# set orientation to south
+	sw	$t6, ANGLE
+	sw	$t7, ANGLE_CONTROL	# absolute turn
+	j	planet_y		# keep adjust y
+
+up:
+	li	$t6, 270		# set orientation to north
+	sw	$t6, ANGLE
+	sw	$t7, ANGLE_CONTROL	# absolute turn
+	j	planet_y
+
+release:
+	la	$t1, planet_info
+	sw	$t1, 0($t0)		# store addr		
+	lw 	$t1, 0($t1)		# get planet_x
+	lw	$t2, BOT_X		# get bot_x
+	bne	$t1, $t2, planet_x
+
+	la	$t1, planet_info
+	sw	$t1, 0($t0)		# store addr	
+	lw	$t4, 4($t1)		# get planet_y
+	lw	$t5, BOT_Y		# get bot_y
+	
+	bne	$t4, $t5, planet_y
+	li	$t9, 0
+	sw	$t9, FIELD_STRENGTH	# turn off bot's gravity
+	j	planet_y
 
 .kdata		# interrupt handler data (separated just for readability)
 chunkIH:	.space 8 # space for two registers
