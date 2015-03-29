@@ -57,8 +57,8 @@ scan_sector:
 	mul	$t5, $t0, 4
 	add	$t5, $t5, $t4
 wait:
-	lw	$t5, flag_var
-	beq	$t5, 1, scan_fin
+	lw	$t3, flag_var
+	beq	$t3, 1, scan_fin
 	j	wait
 scan_fin:
 	lw	$t6, 0($t5)		# number of dust particles
