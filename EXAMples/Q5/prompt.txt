@@ -1,0 +1,17 @@
+In question_2.s, you will find a function to implement
+(with the source commented at the top). Place all of your code in this file.
+Only this file will be graded (we will use our own main.s to test your code).
+
+To test your implementation, we have provided a set of test cases in main.s.
+The instructions to run these tests are at the top of question_2.s.
+
+output.txt contains the correct output for the test cases.
+
+If you wish to run the source directly, we have provided the same test cases
+in main.cpp. Read the top of main.cpp file for compilation instructions.
+
+Since the provided test cases are not necessarily comprehensive, you may want to
+add your own test cases. If you choose to add more test cases, add them to main.s.
+Do not add them to question_2.s!
+
+GL;HF :)
