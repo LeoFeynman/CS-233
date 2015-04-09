@@ -1,0 +1,66 @@
+Grades for version committed on time
+	Growing your planet: 80.0 / 80.0
+		New version first run: 
+			Scan request initiated and interrupt handled correctly
+			Your score: 3489. Your planet has grown really big :)
+			Your planet grows larger than your opponent's
+		New version second run: 
+			Scan request initiated and interrupt handled correctly
+			Your score: 3207. Your planet has grown really big :)
+			Your planet grows larger than your opponent's
+		New version third run: 
+			Scan request initiated and interrupt handled correctly
+			Your score: 2548. Your planet has grown really big :)
+			Your planet grows larger than your opponent's
+		Old version first run: 
+			Scan request initiated and interrupt handled correctly
+			Your score: 250. Your planet still needs more dust :(
+			Your opponent's planet grows as large, if not larger, as yours
+		
+Total: 80.0 / 80
+
+Grades for version committed as of 24 hours after deadline
+	Growing your planet: 80.0 / 80.0
+		New version first run: 
+			Scan request initiated and interrupt handled correctly
+			Your score: 3276. Your planet has grown really big :)
+			Your planet grows larger than your opponent's
+		New version second run: 
+			Scan request initiated and interrupt handled correctly
+			Your score: 2874. Your planet has grown really big :)
+			Your planet grows larger than your opponent's
+		New version third run: 
+			Scan request initiated and interrupt handled correctly
+			Your score: 2911. Your planet has grown really big :)
+			Your planet grows larger than your opponent's
+		Old version first run: 
+			Scan request initiated and interrupt handled correctly
+			Your score: 822. Your planet still needs more dust :(
+			Your opponent's planet grows as large, if not larger, as yours
+		
+	Late penalty: 20% (waivers are applied at the end of the semester)
+Total: 64.0 / 80
+
+Grades for version committed as of 48 hours after deadline
+	Growing your planet: 80.0 / 80.0
+		New version first run: 
+			Scan request initiated and interrupt handled correctly
+			Your score: 2719. Your planet has grown really big :)
+			Your planet grows larger than your opponent's
+		New version second run: 
+			Scan request initiated and interrupt handled correctly
+			Your score: 2922. Your planet has grown really big :)
+			Your planet grows larger than your opponent's
+		New version third run: 
+			Scan request initiated and interrupt handled correctly
+			Your score: 3563. Your planet has grown really big :)
+			Your planet grows larger than your opponent's
+		Old version first run: 
+			Scan request initiated and interrupt handled correctly
+			Your score: 1028. Your planet still needs more dust :(
+			Your planet grows larger than your opponent's
+		
+	Late penalty: 40% (waivers are applied at the end of the semester)
+Total: 48.0 / 80
+
+Final Score: 80.0 / 80
