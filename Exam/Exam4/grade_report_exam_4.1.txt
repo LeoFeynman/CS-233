@@ -1,0 +1,22 @@
+Exam 4 grade report for ywang443:
+
+REGULAR TESTS (70%):
+test 0: CORRECT
+test 1: CORRECT
+test 2: CORRECT
+test 3: CORRECT
+test 4: CORRECT
+
+SCORE: 5 / 5 (70% of total)
+
+
+EVIL TESTS (30%):
+test 0: CORRECT
+test 1: CORRECT
+test 2: CORRECT
+test 3: CORRECT
+test 4: CORRECT
+
+SCORE: 25 / 25 (30% of total)
+
+FINAL SCORE: 100%
