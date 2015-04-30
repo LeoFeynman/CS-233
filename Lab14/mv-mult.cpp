@@ -15,12 +15,28 @@
 float *
 mv_mult_vector(float mat[SIZE][SIZE], float vec[SIZE]) {
 	static float ret[SIZE];
+	__m128 acc, X, Y;
+	acc = _mm_set1_ps(0.0);
+	float temp[4];
 
 	for (int i = 0 ; i < SIZE ; i++) {
+		acc = _mm_set1_ps(0.0);
 		ret[i] = 0;
-		for (int j = 0 ; j < SIZE ; j++) {
-			ret[i] += mat[i][j] * vec[j];
+		int j = 0; 
+		while (j < (SIZE - 3)) {
+			X = _mm_loadu_ps(&mat[i][j]);
+			Y = _mm_loadu_ps(&vec[j]);
+			acc = _mm_add_ps(acc, _mm_mul_ps(X, Y));
+			j += 4;
 		}
+		_mm_storeu_ps(temp, acc);
+		ret[i] = temp[0] + temp[1] + temp[2] + temp[3];
+
+		while (j < SIZE){
+			ret[i] += mat[i][j] * vec[j];
+			j++;
+		}
+
 	}
 
 	return ret;
