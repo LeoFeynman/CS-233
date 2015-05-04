@@ -21,6 +21,9 @@ scan_done:
 first_hit:
 .space 4
 
+pointer:
+.space 4
+
 .align 2
 planet_info:
 .space 64
@@ -36,6 +39,14 @@ puzzle:
 solution:
 .space 804
 
+.align 2
+NUM_particles:
+.space 4
+
+three:	.float	3.0
+five:	.float	5.0
+PI:	.float	3.141592
+F180:	.float  180.0
 
 # movement memory-mapped I/O
 VELOCITY            = 0xffff0010
@@ -158,13 +169,15 @@ interrupt_dispatch:			# Interrupt:
 	bne	$a0, 0,	scan_interrupt
 	and	$a0, $k0, ENERGY_MASK
 	bne	$a0, 0, energy_interrupt
+	and	$a0, $k0, SB_INTERFERENCE_MASK
+	bne	$a0, 0, interference_interrupt
 
 	# add dispatch for other interrupt types here.
 
 	j	done
 energy_interrupt:
-	#add	$t5,	$zero, 0
-	sw	$zero,	VELOCITY($zero)
+	add	$t5,	$zero, 0
+	sw	$t5,	VELOCITY($zero)
 	sw	$a1,	ENERGY_ACKNOWLEDGE
 	jal solve_puzzle
 	j	interrupt_dispatch	
@@ -200,7 +213,7 @@ smallEq:
 	la $t5,	 max_index
 	lw	$t4, 0($t5)
 MOVE_BOT:
-	add	$t5,	$zero, 4
+	add	$t5,	$zero, 10
 	sw	$t5,	VELOCITY($zero)
 	# calculate (x,y) of the centor of the sector
 	add	$t5,	$zero,	8
@@ -208,10 +221,12 @@ MOVE_BOT:
 	mflo	$t0
 	mfhi	$t1
 	# sector center (x, y) = (t1, t0)
-	mul	$t0, $t0, 38
+	mul	$t0, $t0, 38 
 	add	$t0, $t0, 19
 	mul	$t1, $t1, 38
 	add $t1, $t1, 19
+
+
 	# go to (x, y)
 	li		$t4,	1
 	sub		$sp,	$sp,	36
@@ -242,7 +257,8 @@ MOVE_BOT:
 	add		$t0,	$zero, 5
 	sw		$t0,	FIELD_STRENGTH($zero)
 toPlanet:
-
+	add	$t5,	$zero, 6
+	sw	$t5,	VELOCITY($zero)
 	# now take it to your planet
 	# Code copited from bot1.s #################################################################################################
 	la		$t0,	PLANETS_REQUEST
@@ -301,13 +317,7 @@ LoopAlignY2:
 	# compare, if y of robot greater, then go down, otherwise go up
 	bgt		$t2,	$t1,	goUp2
 	# code for go down(absolute angle 180)
-	li		$t3,	90
-	sw		$t3,	0xffff0014($zero)
-	sw		$t4,	0xffff0018($zero)
-	j		keeploop2
-goUp2:
-	# code for go up(absolute angle 0)
-	li		$t3,	270
+	V 
 	sw		$t3,	0xffff0014($zero)
 	sw		$t4,	0xffff0018($zero)
 keeploop2:
@@ -349,6 +359,8 @@ EndOfLoopAlignY2:
 	la		$t0,	max
 	sw		$zero,	0($t0)
 
+	add		$t0,	$zero, 2
+	sw		$t0,	VELOCITY
 	# now deactivate the gravity tractor	
 	add		$t0,	$zero, 0
 	sw		$t0,	FIELD_STRENGTH($zero)
@@ -358,6 +370,11 @@ scan_end:
 	add	$t1,	$zero,	1	
 	sw	$t1,	0($t0)
 	j			interrupt_dispatch	# see if other interrupts are waiting
+
+interference_interupt:
+	sw  $0		SPIMBOT_INTERFERENCE_ACK
+	sw	$zero,	VELOCITY($zero)
+	j			interrupt_dispatch		
 
 
 
@@ -418,6 +435,11 @@ EndOfLoopAlignYF:
 	jr	$ra
 
 solve_puzzle:
+	
+	la   $t0, solution
+	add  $t0, $t0, 4
+	la   $t1, pointer	
+	sw   $t0, ($t1)
 
     sub    $sp, $sp, 16
     sw    $ra, 0($sp)
@@ -430,8 +452,7 @@ solve_puzzle:
     add   $s0, $t0, 4        # &lexical_items
     la    $s2, puzzle
     sw    $s2, SPIMBOT_PUZZLE_REQUEST 
-    la	  $s5, solution		# &solution
-    add   $s6, $s6, 4
+
 search:
     beq    $s1, $0, search_done
     # save stack
@@ -475,10 +496,12 @@ FindWords:
 	sw	$s5, 24($sp)
 	sw	$s6, 28($sp)
 	la	$s5, solution		# &solution
-	lw	$s6, 0($s5)
-	mul	$s6, $s6, 8
-	add	$s6, $s6, 4
-	add	$s6, $s6, $s5
+	la  $s6, pointer
+	lw  $s6, 0($s6)
+	#lw	$s6, 0($s5)
+	#mul	$s6, $s6, 8
+	#add	$s6, $s6, 4
+	#add	$s6, $s6, $s5
 	li	$s4, 0			# num_words
 	li	$s0, 0			# i = 0
 	move	$t1, $a0		# &word = lexicon
@@ -495,9 +518,15 @@ i_loop:#(j = s0)
 	move	$t3,	$a1
 	bge	$s0, $t3, i_done
 j_loop:#(j = s1)
+
 	li	$s2, 0			# k = 0
 	move	$t4,	$a2
 	bge	$s1, $t4, j_done
+
+	lw	$t6, 0($s5)
+	li	$t7, 15
+	beq	$t6, $t7, i_done
+
 	move	$t3, $a2
 	mul	$t3, $t3, $s0		
 	add	$t3, $t3, $s1		# puzzle[i][j]
@@ -507,8 +536,6 @@ j_loop:#(j = s1)
 	lb	$t3,	0($t3)
 	lb	$t4, 0($a0)		# word[0]
 	bne	$t3, $t4, k_done
-
-
 
 k_loop:#(j = s2)
 	la	$t0, step
@@ -556,7 +583,8 @@ inner_if:
 	sw	$s4, 0($s5)
 	sw	$v0, 0($s6)		# save v0		
 	sw	$v1, 4($s6)		# save v1
-	#add	$s6, $s6, 8		# space for next v0 and v1
+	add	$s6, $s6, 8		# space for next v0 and v1
+	sw  $s6, pointer
 	j	if_done
 not_right:
 	li	$t1, 1
@@ -570,7 +598,8 @@ not_right:
 	sw	$s4, 0($s5)
 	sw	$v0, 0($s6)		# save v0		
 	sw	$v1, 4($s6)		# save v1
-	#add	$s6, $s6, 8		# space for next v0 and v1
+	add	$s6, $s6, 8		# space for next v0 and v1
+	sw  $s6, pointer
 	j	if_done
 not_left:
 	li	$t1, 2
@@ -586,7 +615,8 @@ not_left:
 	sw	$s4, 0($s5)
 	sw	$v0, 0($s6)		# save v0		
 	sw	$v1, 4($s6)		# save v1
-	#add	$s6, $s6, 8		# space for next v0 and v1
+	add	$s6, $s6, 8		# space for next v0 and v1
+	sw  $s6, pointer
 	j	if_done
 not_down:
 	li	$t1, 3
@@ -602,7 +632,8 @@ not_down:
 	sw	$s4, 0($s5)
 	sw	$v0, 0($s6)		# save v0		
 	sw	$v1, 4($s6)		# save v1
-	#add	$s6, $s6, 8		# space for next v0 and v1 
+	add	$s6, $s6, 8		# space for next v0 and v1 
+	sw  $s6, pointer
 	j	if_done
 
 if_done:
@@ -657,20 +688,20 @@ if1_done:
 	j	if2_loop
 not_right2:
 	li	$t2, 1
-	bne	$a3, $t2, if2_loop #not_left2
+	bne	$a3, $t2, not_left2
 	sub	$t1, $t1, 1		# y = j-1
 	j	if2_loop
-#not_left2:
-#	li	$t2, 2
-#	bne	$a3, $t2, not_down2
-#	add	$t0, $t0, 1		# x = i+1
-#	j	if2_loop
-#not_down2:
-#	li	$t2, 3
-#	bne	$a3, $t2, if2_loop
-#	sub	$t0, $t0, 1		# x = i-1
-#	j	if2_loop
-# $t2 & $t3 can be used now
+not_left2:
+	li	$t2, 2
+	bne	$a3, $t2, not_down2
+	add	$t0, $t0, 1		# x = i+1
+	j	if2_loop
+not_down2:
+	li	$t2, 3
+	bne	$a3, $t2, if2_loop
+	sub	$t0, $t0, 1		# x = i-1
+	j	if2_loop
+
 if2_loop:
 	blt	$a1, $0, if2_done
 	la	$t7, puzzle
@@ -700,6 +731,55 @@ if2_done:
 	lw	$s1, 8($sp)
 	add	$sp, $sp, 12
 	j	$ra
+#####################################################
+sb_arctan:
+	li	$v0, 0		# angle = 0;
+
+	abs	$t0, $a0	# get absolute values
+	abs	$t1, $a1
+	ble	$t1, $t0, no_TURN_90	  
+
+	## if (abs(y) > abs(x)) { rotate 90 degrees }
+	move	$t0, $a1	# int temp = y;
+	neg	$a1, $a0	# y = -x;      
+	move	$a0, $t0	# x = temp;    
+	li	$v0, 90		# angle = 90;  
+
+no_TURN_90:
+	bgez	$a0, pos_x 	# skip if (x >= 0)
+
+	## if (x < 0) 
+	add	$v0, $v0, 180	# angle += 180;
+
+pos_x:
+	mtc1	$a0, $f0
+	mtc1	$a1, $f1
+	cvt.s.w $f0, $f0	# convert from ints to floats
+	cvt.s.w $f1, $f1
+	
+	div.s	$f0, $f1, $f0	# float v = (float) y / (float) x;
+
+	mul.s	$f1, $f0, $f0	# v^^2
+	mul.s	$f2, $f1, $f0	# v^^3
+	l.s	$f3, three	# load 5.0
+	div.s 	$f3, $f2, $f3	# v^^3/3
+	sub.s	$f6, $f0, $f3	# v - v^^3/3
+
+	mul.s	$f4, $f1, $f2	# v^^5
+	l.s	$f5, five	# load 3.0
+	div.s 	$f5, $f4, $f5	# v^^5/5
+	add.s	$f6, $f6, $f5	# value = v - v^^3/3 + v^^5/5
+
+	l.s	$f8, PI		# load PI
+	div.s	$f6, $f6, $f8	# value / PI
+	l.s	$f7, F180	# load 180.0
+	mul.s	$f6, $f6, $f7	# 180.0 * value / PI
+
+	cvt.w.s $f6, $f6	# convert "delta" back to integer
+	mfc1	$t0, $f6
+	add	$v0, $v0, $t0	# angle += delta
+
+	jr 	$ra
 #########################$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 non_intrpt:				# was some non-interrupt
 
@@ -721,6 +801,8 @@ done:
 	move	$at, $k1		# Restore $at
 .set at 
 	eret
+
+
 
 
 
