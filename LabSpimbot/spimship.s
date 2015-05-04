@@ -21,9 +21,6 @@ scan_done:
 first_hit:
 .space 4
 
-pSolution:
-.space 4
-
 .align 2
 planet_info:
 .space 64
@@ -38,6 +35,8 @@ puzzle:
 .align 2
 solution:
 .space 804
+
+
 # movement memory-mapped I/O
 VELOCITY            = 0xffff0010
 ANGLE               = 0xffff0014
@@ -164,6 +163,8 @@ interrupt_dispatch:			# Interrupt:
 
 	j	done
 energy_interrupt:
+	#add	$t5,	$zero, 0
+	sw	$zero,	VELOCITY($zero)
 	sw	$a1,	ENERGY_ACKNOWLEDGE
 	jal solve_puzzle
 	j	interrupt_dispatch	
@@ -199,7 +200,7 @@ smallEq:
 	la $t5,	 max_index
 	lw	$t4, 0($t5)
 MOVE_BOT:
-	add	$t5,	$zero, 7
+	add	$t5,	$zero, 4
 	sw	$t5,	VELOCITY($zero)
 	# calculate (x,y) of the centor of the sector
 	add	$t5,	$zero,	8
@@ -238,7 +239,7 @@ MOVE_BOT:
 	add		$sp,	$sp,	36
 
 	# now activate the gravity tractor	
-	add		$t0,	$zero, 7
+	add		$t0,	$zero, 5
 	sw		$t0,	FIELD_STRENGTH($zero)
 toPlanet:
 
@@ -439,8 +440,8 @@ search:
 	sw		$a1,	4($sp)
 	sw		$a2,	8($sp)
 	lw		$a0, 	0($s0)
-	lw		$a1,	0($s2)
-	lw		$a2,	4($s2)
+	lw		$a1,	0($s2)#rows
+	lw		$a2,	4($s2)#columns
     jal    FindWords       
 	lw		$a0,	0($sp)
 	lw		$a1,	4($sp)
@@ -453,6 +454,7 @@ search_done:
 
     la    $t7, solution
     sw    $t7, SPIMBOT_SOLVE_REQUEST
+    sw    $0, 0($t7)
     lw    $ra, 0($sp)
     lw    $s0, 4($sp)
     lw    $s1, 8($sp)
@@ -487,12 +489,13 @@ size1:
 	add	$s3, $s3, 1		# size++
 	add	$t1, $t1, 1
 	j	size1
-i_loop:
+i_loop:#(j = s0)
+	li	$s1, 0			# j = 0
 	#la	$t3, puzzle_1
 	move	$t3,	$a1
 	bge	$s0, $t3, i_done
-	li	$s1, 0			# j = 0
-j_loop:
+j_loop:#(j = s1)
+	li	$s2, 0			# k = 0
 	move	$t4,	$a2
 	bge	$s1, $t4, j_done
 	move	$t3, $a2
@@ -504,10 +507,10 @@ j_loop:
 	lb	$t3,	0($t3)
 	lb	$t4, 0($a0)		# word[0]
 	bne	$t3, $t4, k_done
-	li	$s2, 0			# k = 0
 
 
-k_loop:
+
+k_loop:#(j = s2)
 	la	$t0, step
 	sw	$0, 0($t0)
 
@@ -519,11 +522,21 @@ k_loop:
 	
 
 	# a0 not changed
+	sub $sp, $sp,   16
+	sw	$a0,	0($sp)
+	sw	$a1,	4($sp)
+	sw	$a2,	8($sp)
+	sw	$a3,	12($sp)
+	
 	move	$a1,	$s0
 	move	$a2,	$s1
 	move	$a3,	$s2
 	jal	dfs
-	
+	lw	$a0,	0($sp)
+	lw	$a1,	4($sp)
+	lw	$a2,	8($sp)
+	lw	$a3,	12($sp)
+	add $sp, $sp,   16
 	lw	$t0, step($zero)
 	sub	$t0,	$t0,	1
 	bne	$t0, $s3, if_done
@@ -537,6 +550,7 @@ inner_if:
 	add	$v1, $v0, $s3		# start + len
 	sub	$v1, $v1, 1		# start + len - 1
 	#put v0, v1 into solution 
+	beq	$v0, $v1, not_right	
 	lw	$s4, 0($s5)
 	add	$s4, $s4, 1		# num_words++
 	sw	$s4, 0($s5)
@@ -550,6 +564,7 @@ not_right:
 	sub	$v1, $v0, $s3		# start - len
 	add	$v1, $v1, 1		# start - len + 1
 	#put v0, v1 into solution 
+	beq	$v0, $v1, not_left
 	lw	$s4, 0($s5)
 	add	$s4, $s4, 1		# num_words++
 	sw	$s4, 0($s5)
@@ -565,6 +580,7 @@ not_left:
 	mul	$v1, $v1, $a2	
 	add	$v1, $v1, $s1		# end
 	#put v0, v1 into solution
+	beq	$v0, $v1, not_down
 	lw	$s4, 0($s5)
 	add	$s4, $s4, 1		# num_words++
 	sw	$s4, 0($s5)
@@ -580,6 +596,7 @@ not_down:
 	mul	$v1, $v1, $a2
 	add	$v1, $v1, $s1		# end
 	#put v0, v1 into solution
+	beq	$v0, $v1, if_done
 	lw	$s4, 0($s5)
 	add	$s4, $s4, 1		# num_words++
 	sw	$s4, 0($s5)
@@ -589,33 +606,15 @@ not_down:
 	j	if_done
 
 if_done:
-	beq $v0,	-1,	not_print	
-	# print start
-	sub	$sp,	$sp,	4
-	sw	$a0,	0($sp)
-	move	$a0,	$v0
-	#jal print_int_and_space
-	lw	$a0,	0($sp)
-	add $sp,	$sp,	4
-
-	# print v1
-	sub	$sp,	$sp,	4
-	sw	$a0,	0($sp)
-	move	$a0,	$v1
-	#jal print_int_and_space
-	lw	$a0,	0($sp)
-	add $sp,	$sp,	4
-not_print:
 	add	$s2, $s2, 1		# k++
 	j	k_loop
 k_done:
 	add	$s1, $s1, 1		# j++
 	j	j_loop
 j_done:
+	
 	add	$s0, $s0, 1		# i++
 	j	i_loop
-#next_column:
-	#sw	$s4, 0($s5)		# save num_words into solution
 i_done:
 	lw	$ra, 0($sp)
 	lw	$s0, 4($sp)	
@@ -658,33 +657,35 @@ if1_done:
 	j	if2_loop
 not_right2:
 	li	$t2, 1
-	bne	$a3, $t2, not_left2
+	bne	$a3, $t2, if2_loop #not_left2
 	sub	$t1, $t1, 1		# y = j-1
 	j	if2_loop
-not_left2:
-	li	$t2, 2
-	bne	$a3, $t2, not_down2
-	add	$t0, $t0, 1		# x = i+1
-	j	if2_loop
-not_down2:
-	li	$t2, 3
-	bne	$a3, $t2, if2_loop
-	sub	$t0, $t0, 1		# x = i-1
-	j	if2_loop
+#not_left2:
+#	li	$t2, 2
+#	bne	$a3, $t2, not_down2
+#	add	$t0, $t0, 1		# x = i+1
+#	j	if2_loop
+#not_down2:
+#	li	$t2, 3
+#	bne	$a3, $t2, if2_loop
+#	sub	$t0, $t0, 1		# x = i-1
+#	j	if2_loop
 # $t2 & $t3 can be used now
 if2_loop:
 	blt	$a1, $0, if2_done
-	li	$t3,	16
+	la	$t7, puzzle
+	lw	$t7, 4($t7)	#columns
+	move $t3, $t7
 	bge	$a1, $t3, if2_done
 	blt	$a2, $0, if2_done
-	li	$t3,	16
+	move $t3, $t7
 	bge	$a2, $t3, if2_done
 	add	$t4, $a0, $s0	# &str[step]
 	sub	$t4,	$t4, 	1
 	lb	$t4, 0($t4)	# str[step]
 	la	$t5, puzzle
 	add	$t5, $t5,	8
-	li	$t6,	16
+	move $t6, $t7
 	mul	$t6, $t6, $a1	# x * columns
 	add	$t6, $t6, $a2	# x * columns + y
 	add	$t6, $t5, $t6	# map[x][y]
@@ -720,5 +721,7 @@ done:
 	move	$at, $k1		# Restore $at
 .set at 
 	eret
+
+
 
 
