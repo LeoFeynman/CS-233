@@ -16,6 +16,9 @@ sector_info:	.space	256
 pointer:
 .space 4
 
+vplus:
+.space 4
+
 flag_var:	
 	.space	4
 	.word	0
@@ -203,6 +206,21 @@ gravity:
 	li	$t0, 4
 	sw	$t0, VELOCITY
 	
+	li	$t3, SCAN_MASK
+	or	$t3, ENERGY_MASK
+	or	$t3, SB_INTERFERENCE_MASK
+	or	$t3, TIMER_MASK	
+	or	$t3, $t3, 1		
+	mtc0	$t3, $12		# enable scan_interrupt
+
+	la	$a0, vplus
+	sw	$zero, 0($a0)
+
+	li	$t0, 170
+	lw	$t1, TIMER
+	add	$t0, $t0, $t1
+	sw	$t0, TIMER
+
 
 #-----------------------locating plannet----------------------------#
 	li	$t7, 1			# absolute turn
@@ -247,7 +265,13 @@ up:
 	j	planet_x
 
 #----------------------release the dust------------------#
-release:				
+release:
+	li	$t1, SCAN_MASK
+	or	$t1, ENERGY_MASK
+	or	$t1, SB_INTERFERENCE_MASK
+	or	$t1, $t1, 1		
+	mtc0	$t1, $12		# enable scan_interrupt
+				
 	la	$t1, planet_info
 	sw	$t1, 0($t0)		# store addr		
 	lw 	$t1, 0($t1)		# get planet_x
@@ -611,6 +635,18 @@ interference_interupt:
 turn_off:
 	sw	$0, FIELD_STRENGTH
 abc:	
+	j	interrupt_dispatch
+
+timer_interrupt:
+	sw	$a1, TIMER_ACKNOWLEDGE
+	la	$a0, vplus
+	lw	$a1, 0($a1)
+	add     $a1, $a1, 2
+	sw 	$a1, 0($a0)	
+
+	lw	$t8, VELOCITY
+	add	$t8, $t8, $a1
+	sw	$t8, VELOCITY
 	j	interrupt_dispatch
 
 non_intrpt: 
