@@ -121,7 +121,7 @@ energy_inter:
 	sw	$t9, 36($sp)
 	sw	$0, VELOCITY
 	jal	solve_puzzle
-	li	$t0, 6
+	li	$t0, 10
 	sw	$t0, VELOCITY
 	lw	$t0, 0($sp)
 	lw	$t1, 4($sp)
@@ -198,9 +198,9 @@ down:
 
 #----------------------bot arrived & activate field------------------#
 gravity:
-	li	$t0, 6
+	li	$t0, 5
 	sw	$t0, FIELD_STRENGTH
-	li	$t0, 6
+	li	$t0, 4
 	sw	$t0, VELOCITY
 	
 
@@ -218,13 +218,13 @@ planet_x:
 	li	$t3, 0			# set orientation to east
 	sw	$t3, ANGLE
 	sw	$t7, ANGLE_CONTROL	# absolute turn
-	j	planet_x
+	j	planet_y
 
 left:
 	li	$t3, 180		# set orientation to west
 	sw	$t3, ANGLE
 	sw	$t7, ANGLE_CONTROL	# absolute turn
-	j	planet_x		# keep adjust x
+	j	planet_y		# keep adjust x
 
 planet_y:
 	la	$t0, PLANETS_REQUEST
@@ -238,13 +238,13 @@ planet_y:
 	li	$t6, 90			# set orientation to south
 	sw	$t6, ANGLE
 	sw	$t7, ANGLE_CONTROL	# absolute turn
-	j	planet_y		# keep adjust y
+	j	planet_x		# keep adjust y
 
 up:
 	li	$t6, 270		# set orientation to north
 	sw	$t6, ANGLE
 	sw	$t7, ANGLE_CONTROL	# absolute turn
-	j	planet_y
+	j	planet_x
 
 #----------------------release the dust------------------#
 release:				
