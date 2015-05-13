@@ -1,0 +1,4 @@
+Ranks over each run: ['68', '64', '21', '45', '69', '24', '55', '45']
+	 Best rank: 21
+
+Final Score: 70.0 / 100
