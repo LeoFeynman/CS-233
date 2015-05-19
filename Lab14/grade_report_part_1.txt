@@ -1,0 +1,7 @@
+Grades for version committed on time
+	mv mult test: 40 / 40
+			*Passed test: mv-mult achieved expected speed up
+		
+Total: 40.0 / 40
+
+Final Score: 40.0 / 40
