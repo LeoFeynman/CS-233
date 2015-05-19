@@ -1,0 +1,15 @@
+Grades for version committed on time
+	mandelbrot: 0 / 40
+		Failed to compile
+		
+	compiler vectorization: 20 / 20
+			*Passed test: t1 was properly vectorized
+			*Passed test: t2 was properly vectorized
+			*Passed test: t3 has data dependencies and was not vectorized
+			*Passed test: t4 was properly vectorized
+			*Passed test: t5 was properly vectorized
+			*Passed test: t6 has data dependencies and was not vectorized
+		
+Total: 20.0 / 60
+
+Final Score: 20.0 / 60
