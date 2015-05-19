@@ -1,0 +1,11 @@
+Grades for version committed on time
+	prefetch: 20 / 20
+			*Passed test: prefetch
+		
+	fusion: 0 / 20
+		Failed to execute student code
+	all: 0 / 40
+		Failed to execute student code
+Total: 20.0 / 80
+
+Final Score: 20.0 / 80
